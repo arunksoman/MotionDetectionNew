@@ -1,0 +1,45 @@
+{% extends 'admin/master.html' %}
+
+{% block head_css %}
+{{ super() }}
+<link href="{{ url_for('static', filename='w3.css') }}" rel="stylesheet">
+<script>
+    function myFunction(){
+        var checkBox = document.getElementById("myCheck");
+        var text;
+        if (checkBox.checked == true){
+            text = "0";
+          } else {
+             text = "1";
+          }
+        var url_for_request = 'ajaxControl/' + text;
+        $.ajax({url: url_for_request, success: function(result){
+            $("#state").html(result);
+        }});
+    }
+</script>
+{% endblock head_css %}
+
+{% block body %}
+<div class="w3-container">
+    <div class="w3-display-middle">
+        <img class="w3-cenetr" src="{{ url_for('video_feed') }}" alt="">
+    </div>
+</div>
+<div class="w3-container">
+    <form class="w3-container" action="/control" method="POST">
+        <table align="center">
+            <tr>
+                <td>
+                    <input class="w3-blue w3-button w3-large" name="on_button" type="submit" value="ON">
+                </td>
+                <td>
+                    <input class="w3-blue w3-button w3-large" name="off_button" type="submit" value="OFF">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+
+{% endblock body %}
