@@ -1,5 +1,6 @@
 import time
 import threading
+from utilities.video_utilities import FPS
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
@@ -89,16 +90,20 @@ class BaseCamera(object):
     def _thread(cls):
         """Camera background thread."""
         print('Starting camera thread.')
+        fps = FPS().start()
         frames_iterator = cls.frames()
         for frame in frames_iterator:
             BaseCamera.frame = frame
             BaseCamera.event.set()  # send signal to clients
             time.sleep(0)
-
+            fps.update()
             # if there hasn't been any clients asking for frames in
             # the last 10 seconds then stop the thread
             if time.time() - BaseCamera.last_access > 3:
                 frames_iterator.close()
+                fps.stop()
+                print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
+                print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
                 print('Stopping camera thread due to inactivity.')
                 break
         BaseCamera.thread = None

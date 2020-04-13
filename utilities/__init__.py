@@ -14,3 +14,4 @@ from .convenience import check_opencv_version
 from .convenience import build_montages
 from .convenience import adjust_brightness_contrast
 from .KeyClipWriter import KeyClipWriter
+from .MotionDetector import MotionDetector
